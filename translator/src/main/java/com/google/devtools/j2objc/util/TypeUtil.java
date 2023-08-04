@@ -22,6 +22,7 @@ import com.google.devtools.j2objc.types.GeneratedArrayType;
 import com.google.devtools.j2objc.types.GeneratedTypeElement;
 import com.google.devtools.j2objc.types.NativeType;
 import com.google.devtools.j2objc.types.PointerType;
+import com.google.j2objc.annotations.GenerateObjectiveCGenerics;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -207,6 +208,14 @@ public final class TypeUtil {
 
   public static boolean isTypeVariable(TypeMirror t) {
     return t.getKind() == TypeKind.TYPEVAR;
+  }
+
+  public static boolean hasGenerateObjectiveCGenerics(TypeElement t) {
+    return ElementUtil.hasAnnotation(t, GenerateObjectiveCGenerics.class);
+  }
+
+  public static boolean hasGenerateObjectiveCGenerics(TypeMirror t) {
+    return asTypeElement(t) != null && hasGenerateObjectiveCGenerics(asTypeElement(t));
   }
 
   public static TypeElement asTypeElement(TypeMirror t) {
@@ -697,6 +706,34 @@ public final class TypeUtil {
       return false;
     }
     return true;
+  }
+
+  public boolean isProtoClass(TypeMirror t) {
+    DeclaredType supertype = findSupertype(t, "com.google.protobuf.GeneratedMessage");
+    if (supertype != null) {
+      return true;
+    }
+    supertype = findSupertype(t, "com.google.protobuf.GeneratedMessageLite");
+    if (supertype != null) {
+      return true;
+    }
+    supertype = findSupertype(t, "com.google.protobuf.MessageOrBuilder");
+    if (supertype != null) {
+      return true;
+    }
+    supertype = findSupertype(t, "com.google.protobuf.MessageLiteOrBuilder");
+    if (supertype != null) {
+      return true;
+    }
+    supertype = findSupertype(t, "com.google.protobuf.Extension");
+    if (supertype != null) {
+      return true;
+    }
+    supertype = findSupertype(t, "com.google.protobuf.ExtensionLite");
+    if (supertype != null) {
+      return true;
+    }
+    return false;
   }
 
   public boolean isObjcSubtype(TypeElement type, TypeElement targetSupertype) {

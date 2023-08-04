@@ -37,7 +37,6 @@ import com.google.devtools.j2objc.util.NameTable;
 import com.google.devtools.j2objc.util.TranslationEnvironment;
 import com.google.devtools.j2objc.util.TypeUtil;
 import com.google.devtools.j2objc.util.UnicodeUtils;
-import com.google.j2objc.annotations.GenerateObjectiveCGenerics;
 import com.google.j2objc.annotations.ObjectiveCName;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
@@ -167,6 +166,11 @@ public abstract class TypeGenerator extends AbstractSourceGenerator {
     }
   };
 
+  protected boolean generateObjectiveCGenerics(TypeMirror t) {
+    return (options.asObjCGenericDecl() || TypeUtil.hasGenerateObjectiveCGenerics(t))
+        && !TypeUtil.isInterface(t);
+  }
+
   protected abstract void printFunctionDeclaration(FunctionDeclaration decl);
   protected abstract void printMethodDeclaration(MethodDeclaration decl);
   protected abstract void printNativeDeclaration(NativeDeclaration decl);
@@ -289,21 +293,19 @@ public abstract class TypeGenerator extends AbstractSourceGenerator {
     }
   }
 
-  protected boolean hasGenerateObjectiveCGenerics(TypeMirror type) {
-    return TypeUtil.asTypeElement(type) != null
-        && ElementUtil.hasAnnotation(
-            TypeUtil.asTypeElement(type), GenerateObjectiveCGenerics.class);
-  }
-
   /** Create an Objective-C method signature string. */
-  protected String getMethodSignature(MethodDeclaration m, boolean asObjCGenericDecl) {
+  protected String getMethodSignature(MethodDeclaration m, boolean generatorAllowsGenerics) {
     StringBuilder sb = new StringBuilder();
     ExecutableElement element = m.getExecutableElement();
     char prefix = Modifier.isStatic(m.getModifiers()) ? '+' : '-';
     String returnType =
         nameTable.getObjCTypeDeclaration(
             element.getReturnType(),
-            hasGenerateObjectiveCGenerics(element.getReturnType()) || asObjCGenericDecl);
+            generatorAllowsGenerics
+                && (generateObjectiveCGenerics(element.getReturnType())
+                    || generateObjectiveCGenerics(typeElement.asType())),
+            !isInterfaceType(),
+            typeElement);
     String selector = nameTable.getMethodSelector(element);
 
     // Verify the same number of parameters are defined by the method and the annotation.
@@ -346,7 +348,12 @@ public abstract class TypeGenerator extends AbstractSourceGenerator {
         VariableElement var = params.get(i).getVariableElement();
         String typeName =
             nameTable.getObjCTypeDeclaration(
-                var.asType(), hasGenerateObjectiveCGenerics(var.asType()) || asObjCGenericDecl);
+                var.asType(),
+                generatorAllowsGenerics
+                    && (generateObjectiveCGenerics(var.asType())
+                        || generateObjectiveCGenerics(typeElement.asType())),
+                !isInterfaceType(),
+                typeElement);
         sb.append(
             UnicodeUtils.format(
                 "%s:(%s%s)%s",

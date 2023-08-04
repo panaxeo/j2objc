@@ -71,7 +71,9 @@ public class TypePrivateDeclarationGenerator extends TypeDeclarationGenerator {
   private void printClassExtension() {
     newline();
     printNonnullAuditedRegion(AuditedRegion.BEGIN);
-    printf("@interface %s ()", typeName);
+    printf("@interface %s", typeName);
+    printInterfaceGenerics();
+    printf(" ()");
     printInstanceVariables();
     Iterable<BodyDeclaration> privateDecls = getInnerDeclarations();
     printDeclarations(privateDecls);

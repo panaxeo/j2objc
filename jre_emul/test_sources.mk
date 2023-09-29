@@ -446,6 +446,25 @@ TEST_SOURCES := \
     j2objc/java/util/TreeMapTest.java \
     j2objc/java/util/WeakHashMapTest.java \
     j2objc/java/util/regex/MatcherTest.java \
+    libcore/icu/NativeDecimalFormatTest.java \
+    libcore/io/PosixTest.java \
+    libcore/java/io/ObjectOutputStreamTest.java \
+    libcore/java/lang/CharacterTest.java \
+    libcore/java/net/URLConnectionTest.java \
+    libcore/java/text/ChoiceFormatTest.java \
+    libcore/java/text/DateFormatSymbolsTest.java \
+    libcore/java/text/DecimalFormatTest.java \
+    libcore/java/text/SimpleDateFormatTest.java \
+    libcore/java/util/LocaleTest.java \
+    libcore/javax/xml/datatype/DatatypeFactoryTest.java \
+    libcore/javax/xml/datatype/DurationImpl.java \
+    libcore/javax/xml/datatype/DurationTest.java \
+    libcore/javax/xml/parsers/DocumentBuilderFactoryTest.java \
+    libcore/javax/xml/parsers/DocumentBuilderTest.java \
+    libcore/javax/xml/transform/SourceLocatorImpl.java \
+    libcore/javax/xml/transform/TransformerConfigurationExceptionTest.java \
+    libcore/javax/xml/transform/TransformerExceptionTest.java \
+    libcore/libcore/icu/LocaleDataTest.java \
     libcore/java/awt/font/TextAttributeTest.java \
     libcore/java/io/CharArrayWriterTest.java \
     libcore/java/io/DataOutputStreamTest.java \

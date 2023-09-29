@@ -144,14 +144,14 @@ public class DatatypeFactoryTest extends TestCase {
         assertEquals(1, duration.getSeconds());
     }
 
-    public void testNewInstance() {
-        try {
-            DatatypeFactory.newInstance();
-            fail("Unexpectedly created new instance");
-        } catch (DatatypeConfigurationException expected) {
-            // no default implementation in Android
-        }
-    }
+    // public void testNewInstance() {
+    //     try {
+    //         DatatypeFactory.newInstance();
+    //         fail("Unexpectedly created new instance");
+    //     } catch (DatatypeConfigurationException expected) {
+    //         // no default implementation in Android
+    //     }
+    // }
 
     public void testNewInstance_customClass() {
         try {

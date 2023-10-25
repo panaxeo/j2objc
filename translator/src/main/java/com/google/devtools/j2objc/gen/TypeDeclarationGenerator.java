@@ -626,6 +626,37 @@ public class TypeDeclarationGenerator extends TypeGenerator {
     }
   }
 
+  private void printPretendProperties(MethodDeclaration m) {
+    ExecutableElement methodElement = m.getExecutableElement();
+    String methodName = nameTable.getMethodSelector(methodElement);
+    String propertyName = NameTable.lowercaseFirst(methodName.replaceFirst("get", ""));
+    if (NameTable.isReservedName(methodName)) {
+      return;
+    }
+    String possibleSetterName = "set" + NameTable.capitalize(propertyName);
+    String setterName = null;
+    for (BodyDeclaration decl : getInnerDeclarations()) {
+      if (!(decl instanceof MethodDeclaration)) {
+        continue;
+      }
+      MethodDeclaration method = (MethodDeclaration) decl;
+      if (method.getName().getFullyQualifiedName().contains(possibleSetterName)
+          && method.getParameters().size() == 1) {
+        setterName = nameTable.getMethodSelector(method.getExecutableElement());
+        break;
+      }
+    }
+    newline();
+    printf(
+        "@property (nonatomic, %s, %s%s) %s%s;",
+        "getter=" + methodName,
+        setterName != null ? "setter=" + setterName : "readonly",
+        shouldAddNullableAnnotation(methodElement) ? ", nullable" : "",
+        getReturnType(m, needsGenerateObjectiveCGenerics()),
+        propertyName);
+    newline();
+  }
+
   /**
    * Emit method declaration.
    *
@@ -633,6 +664,10 @@ public class TypeDeclarationGenerator extends TypeGenerator {
    * @param isCompanionClass If true, emit only if m is a static interface method.
    */
   private void printMethodDeclaration(MethodDeclaration m, boolean isCompanionClass) {
+    if (m.getPropertable()) {
+      printPretendProperties(m);
+    }
+
     ExecutableElement methodElement = m.getExecutableElement();
     TypeElement typeElement = ElementUtil.getDeclaringClass(methodElement);
 

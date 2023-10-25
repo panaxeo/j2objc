@@ -279,6 +279,11 @@ public class NameTable {
     return s.length() > 0 ? Character.toUpperCase(s.charAt(0)) + s.substring(1) : s;
   }
 
+  /** Lowercase the first letter of a string. */
+  public static String lowercaseFirst(String s) {
+    return s.length() > 0 ? Character.toLowerCase(s.charAt(0)) + s.substring(1) : s;
+  }
+
   /**
    * Given a period-separated name, return as a camel-cased type name.  For
    * example, java.util.logging.Level is returned as JavaUtilLoggingLevel.
@@ -744,7 +749,7 @@ public class NameTable {
     return ElementUtil.getName(element).replace('$', '_');
   }
 
-  private static boolean isReservedName(String name) {
+  public static boolean isReservedName(String name) {
     return reservedNames.contains(name) || nsObjectMessages.contains(name);
   }
 

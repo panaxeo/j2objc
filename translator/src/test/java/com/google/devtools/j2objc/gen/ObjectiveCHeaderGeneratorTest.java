@@ -715,6 +715,25 @@ public class ObjectiveCHeaderGeneratorTest extends GenerationTest {
         "FooBar_Internal *fieldFoo_;");
   }
 
+  public void testPropertiesOfGetTypes() throws IOException {
+    String sourceContent =
+        "  import com.google.j2objc.annotations.Property;"
+            + "@Property "
+            + "public class FooBar {"
+            + "  private String fieldFoo = \"test\";"
+            + "  "
+            + "  public String getFooField() {"
+            + "     return fieldFoo;"
+            + "  }"
+            + "  public void setFooField(String foo) {"
+            + "    fieldFoo = foo;"
+            + "  }"
+            + "}";
+    String translation = translateSourceFile(sourceContent, "FooBar", "FooBar.h");
+    assertTranslatedLines(
+        translation, "WEAK_ FooBar_Internal *fieldBar_;", "FooBar_Internal *fieldFoo_;");
+  }
+
   public void testAddIgnoreDeprecationWarningsPragmaIfDeprecatedDeclarationsIsEnabled()
       throws IOException {
     options.enableDeprecatedDeclarations();

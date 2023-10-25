@@ -34,6 +34,8 @@ public class MethodDeclaration extends BodyDeclaration {
       ChildList.create(SingleVariableDeclaration.class, this);
   private ChildLink<Block> body = ChildLink.create(Block.class, this);
 
+  private boolean isPropertable = false;
+
   public MethodDeclaration() {}
 
   public MethodDeclaration(MethodDeclaration other) {
@@ -119,6 +121,14 @@ public class MethodDeclaration extends BodyDeclaration {
 
   public Block getBody() {
     return body.get();
+  }
+
+  public void setPropertable(boolean propertable) {
+    isPropertable = propertable;
+  }
+
+  public boolean getPropertable() {
+    return isPropertable;
   }
 
   public MethodDeclaration setBody(Block newBody) {

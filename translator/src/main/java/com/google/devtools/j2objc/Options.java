@@ -655,6 +655,7 @@ public class Options {
   }
 
   private void postProcessArgs() {
+    setSwiftEnums(true); // TEMP remove
     postProcessSourceVersion();
     // Fix up the classpath, adding the current dir if it is empty, as javac would.
     List<String> classPaths = fileUtil.getClassPathEntries();
